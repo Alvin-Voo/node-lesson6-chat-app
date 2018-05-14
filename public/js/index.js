@@ -2,8 +2,6 @@ let socket = io();//this one starts the polling in client side
 
 socket.on('connect',function(){
   console.log(socket.id,' is connected to server');
-
-  socket.emit('createMessage',{from:'punya', text:'Heya'});
 })
 
 socket.on('disconnect',function(){
