@@ -25,9 +25,10 @@ io.on('connection',(socket)=>{ //socket is from client
 
   socket.broadcast.emit('newMessage',generateMessage('Admin', 'New user joined'));
 
-  socket.on('createMessage', (message)=>{
+  socket.on('createMessage', (message, callback)=>{
     console.log(socket.id,' create Message ',message);
     io.emit('newMessage',generateMessage(message.from, message.text));
+    callback('balalal');
   })
 
   socket.on('disconnect', ()=>{
