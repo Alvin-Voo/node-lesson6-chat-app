@@ -3,7 +3,7 @@ const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
 
-const {generateMessage} = require('./utils/message');
+const {generateMessage, generateLocationMessage} = require('./utils/message');
 
 const port = process.env.PORT || 3000;
 
@@ -17,7 +17,6 @@ app.use(express.static(path.join(__dirname,'../public/')));
 // app.get('/',(req,res)=>{
 //   res.sendFile(path.join(__dirname,'../public/index.html'));
 // })
-
 io.on('connection',(socket)=>{ //socket is from client
   console.log('New user connected: ',socket.id);
 
@@ -28,7 +27,11 @@ io.on('connection',(socket)=>{ //socket is from client
   socket.on('createMessage', (message, callback)=>{
     console.log(socket.id,' create Message ',message);
     io.emit('newMessage',generateMessage(message.from, message.text));
-    callback('balalal');
+    callback('acknowledge');
+  })
+
+  socket.on('createLocationMessage', (position)=>{
+    io.emit('newLocationMessage',generateLocationMessage('Admin',position.latitude,position.longitude));
   })
 
   socket.on('disconnect', ()=>{
