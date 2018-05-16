@@ -36,6 +36,16 @@ socket.on('connect',function(){
   })
 })
 
+socket.on('updateUserList', function(usersList){
+  console.log(usersList);
+
+  let template = jQuery('#userslist-template').html();
+  let html = Mustache.render(template,{usersList});
+
+  jQuery('#users').empty().append(html);
+
+})
+
 socket.on('disconnect',function(){
   console.log(socket.id,' is disconnected from server');
 })
