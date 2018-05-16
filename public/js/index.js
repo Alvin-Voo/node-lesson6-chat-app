@@ -1,5 +1,26 @@
 let socket = io();//this one starts the polling in client side
 
+function scrollToBottom(){
+  //Selectors
+  let messages = jQuery('#messages'); //ol#messages
+  let newMessage = messages.children('li:last-child');
+
+  //Heights
+  let clientHeight = messages.prop('clientHeight');//viewable height of an element in pixels, including padding
+  let scrollTop = messages.prop('scrollTop');//scrolled top height of element
+  let scrollHeight = messages.prop('scrollHeight');//entire height of element including padding
+
+  let newMessageHeight = newMessage.innerHeight();//element height, including padding
+  let lastMessageHeight = newMessage.prev().innerHeight();//get 2nd last message as well
+
+  //The goal is to scroll when user is less than one message apart from reaching the bottom
+  if(clientHeight+scrollTop+newMessageHeight+lastMessageHeight>= scrollHeight){
+    messages.scrollTop(scrollHeight);//here just scroll to maximum height
+    //If the number is greater than the maximum allowed scroll amount, the number is set to the maximum number
+  }
+
+}
+
 socket.on('connect',function(){
   console.log(socket.id,' is connected to server');
 })
@@ -18,6 +39,7 @@ socket.on('newMessage',function(message){
   });
 
   jQuery('#messages').append(html);
+  scrollToBottom();
 })
 
 socket.on('newLocationMessage', function(message){
@@ -30,6 +52,7 @@ socket.on('newLocationMessage', function(message){
   });
 
   jQuery('#messages').append(html);
+  scrollToBottom();
 })
 
 jQuery('#message-form').on('submit', function(e){
